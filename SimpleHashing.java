@@ -49,7 +49,7 @@ public class SimpleHashing
                     break;
                 case "2":
                     obj.increment();
-                    JOptionPane.showMessageDialog(null, "Employee deleted successfully.");
+                    JOptionPane.showMessageDialog(null, "Leaves incremented successfully");
 
                     break;
                 case "3":
@@ -112,8 +112,8 @@ public class SimpleHashing
                     }
                     break;
                 case "5":
-                    //String displayText = bPlusTree.displayEmployees();
-                    // JOptionPane.showMessageDialog(null, displayText);
+                    String displayText = obj.displayAll();;
+                     JOptionPane.showMessageDialog(null, displayText);
 
                     JOptionPane pane = new JOptionPane("Show", JOptionPane.INFORMATION_MESSAGE);
                     pane.setPreferredSize(new Dimension(800, 600)); // Set the desired size
@@ -133,42 +133,7 @@ public class SimpleHashing
         }
     }
 	
-	public void create_index()throws IOException,ArrayIndexOutOfBoundsException
-	{
-		count = -1;
-		long pos;
-		RandomAccessFile file = new RandomAccessFile("details.txt", "r");
-		pos = file.getFilePointer();
-		String s ;
-		while((s = file.readLine())!=null)
-		{
-		String[] result = s.split("\\|");
-		count++;
-		usn_list[count] = result[0];
-		Address_list[count] = (int)pos;
-		pos=file.getFilePointer();
-		}
-		file.close();
-		sort_index();
-	}
-	public void sort_index()throws IOException
-	{
-		for(int i=0;i<=count;i++)
-		{
-			for(int j=i+1;j<=count;j++)
-			{
-				if(usn_list[i].compareTo(usn_list[j])>0)
-				{
-					String temp = usn_list[i];
-					usn_list[i] = usn_list[j];
-					usn_list[j] = temp;
-					int temp1 = Address_list[i];
-					Address_list[i]=Address_list[j];
-					Address_list[j]=temp1;
-				}
-			}
-		}
-	}
+
 	public boolean insert(int empId, String name , double cl, double sl, double el)throws IOException,FileNotFoundException{
 				
 		int flag = 0;
@@ -204,7 +169,7 @@ public class SimpleHashing
 		else{
 			
 
-			String line = empId+"|"+name+"|"+cl+"|"+sl+"|"+el+"|"+"\n";
+			String line = toFixedLength(empId+"|"+name+"|"+cl+"|"+sl+"|"+el+"|");
 			file.seek(pos);
 			String tempAdd = "";
 			if (flag == 1){
@@ -251,7 +216,7 @@ public class SimpleHashing
 			float cl = Float.parseFloat(line[2])+1;
 			float sl = Float.parseFloat(line[3])+1;
 			float pl = Float.parseFloat(line[4])+1;
-			writeBack += empId+"|"+name+"|"+cl+"|"+sl+"|"+pl+"|";
+			writeBack += toFixedLength(empId+"|"+name+"|"+cl+"|"+sl+"|"+pl+"|");
 		}
 		file.seek(0);
 		
@@ -304,7 +269,7 @@ public class SimpleHashing
 			pl -= days;
 		}
 		file.seek(pos);
-		writeBack += file_empId+"|"+name+"|"+cl+"|"+sl+"|"+pl+"|"+"\n";
+		writeBack += toFixedLength(file_empId+"|"+name+"|"+cl+"|"+sl+"|"+pl+"|");
 		file.write(writeBack.getBytes());
 		file.close();
 		return true;
@@ -315,7 +280,7 @@ public class SimpleHashing
 	
 	public String search(int empId)throws IOException
 
-	{	System.out.println("empID: -"+Integer.toString(empId)+ "-");
+	{	
 		String keys;
 		RandomAccessFile inpFile = new RandomAccessFile("input.dat","r");
 		keys = inpFile.readLine();
@@ -330,7 +295,7 @@ public class SimpleHashing
 		}
 		if (flag == 0) return "";
 		inpFile.close();
-		String arg [] = new String[] {"input.dat", "3", "16", "output1.dat"};
+		String arg [] = new String[] {"input.dat", "3", Integer.toString(empId), "output1.dat"};
 		
 		BPlus.main(arg);
 		//read 3rd line
@@ -342,7 +307,7 @@ public class SimpleHashing
 		int lineNo = Integer.parseInt(s);
 		file1.close();
 		
-		RandomAccessFile file = new RandomAccessFile("details.txt", "rw");
+		RandomAccessFile file = new RandomAccessFile("details.txt", "r");
 		for (int i = 1; i < lineNo; i++){
 			s = file.readLine();
 			
@@ -354,52 +319,58 @@ public class SimpleHashing
 		float cl = Float.parseFloat(line[2]);
 		float sl = Float.parseFloat(line[3]);
 		float pl = Float.parseFloat(line[4]);
-		
+		file.close();
 		writeBack += "Employee ID: " + empId+"\nEmployee name: "+name+"\nRemaining CL: "+cl;
 			writeBack += "\nRemaining SL: "+sl+"\nRemaining PL: "+pl;
 		
 		return writeBack;
 
 	}
-	public int search_index(String key)
-	{
-	int low = 0, high = count, mid = 0;
-	while(low <= high)
-	{
-	mid = (low + high)/2;
-	if(usn_list[mid].equals(key))
-	return mid;
-	if(usn_list[mid].compareTo(key)>0)
-	high = mid - 1;
-	if(usn_list[mid].compareTo(key)<0)
-	low = mid + 1;
-
+	
+	public String displayAll() throws FileNotFoundException, IOException{
+		String ret = "";
+		RandomAccessFile file = new RandomAccessFile("details.txt", "r");
+		
+		String s;
+		while((s = file.readLine())!=null)
+		{
+			String[] line = s.split("\\|");
+			String empId = line[0];
+			String name = line[1];
+			float cl = Float.parseFloat(line[2])+1;
+			float sl = Float.parseFloat(line[3])+1;
+			float pl = Float.parseFloat(line[4])+1;
+			ret += "\nEmployee ID: " + empId;
+			ret += "\nEmployee Name: " + name;
+			ret += "\nRemaining CL: " + cl;
+			ret += "\nRemaining SL: " + sl;
+			ret += "\nRemaining PL: " + pl;
+			ret += "\n-------------------------\n";
+						
+		}
+		
+		file.close();
+		return ret;
+		
 	}
-	return -1;
+	
+	public String toFixedLength(String varLengthStr){
+		String b = varLengthStr;
+		int len = 32;
+		int le = b.length();
+		String s1 = "-";
+		if(le<50)
+		{
+			for(int j=le;j<=50;j++)
+			b = b.concat(s1);
+			
+		}
+		b += "|\n";
+		return b;
+		
 	}
-	public void display_record(int pos)throws IOException
-	{
-	RandomAccessFile file = new RandomAccessFile("details.txt", "r");
-	int address = Address_list[pos];
-	String usn="",sem="",branch="",name="";
-	file.seek(address);
-	String s = file.readLine();
-	while(s!=null)
-	{
-	String[] result = s.split("\\|");
-	usn = result[0];
-	name = result[1];
-	sem = result[2];
-	branch = result[3];
-	System.out.println("\nRecord Details");
-	System.out.println("USN: " + usn);
-	System.out.println("Name: " + name);
-	System.out.println("Sem: " + sem);
-	System.out.println("Branch: " + branch);
-	break;
-	}
-	file.close();
-	}
+	
+	
 	
 
 }
