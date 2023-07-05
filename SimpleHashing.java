@@ -2,50 +2,136 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.*;
 import java.util.Scanner;
+import java.awt.Dimension;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 public class SimpleHashing
 {
 	public static int count;
 	public static final int[] Address_list = new int[100];
 	public static final String[] usn_list = new String[100];
-	public static Scanner s = new Scanner(System.in);
-	public static void main(String[] args)throws IOException
-	{
-	SimpleHashing obj = new SimpleHashing();
-	
-	
-	//obj.insert(22,"xyz",4,3.5,6);
-	obj.requestLeave(22,2,0.5);
-	
-	
-	/*while(true)
-	{
-	System.out.println("\nPlease enter your choice:");
-	ch = s.nextInt();
-	s.nextLine();
-	switch(ch)
-	{
-	case 1:
-	obj.insert();
-	break;
-	case 2:
-	obj.search();
-	break;
-	case 3:
-	obj.remove();
-	break;
-	case 4:
-	System.out.println("Do you want to exit? (Y/N)");
-	if(s.next().equalsIgnoreCase("y"))
-	{
-	System.out.println("Program Ended");
-	System.exit(0);
-	}break;
-	default:
-	System.out.println("Invalid Option");
-	}*/
-	
-	}
+	//public static Scanner s = new Scanner(System.in);
+	public static void main(String[] args)throws IOException {
+
+        SimpleHashing obj = new SimpleHashing();
+
+
+        //obj.insert(22,"xyz",4,3.5,6);
+        //obj.requestLeave(22,2,0.5);
+		
+
+        //SimpleHashing obj = new SimpleHashing();
+        boolean exit = false;
+        while (!exit) {
+            String choice = JOptionPane.showInputDialog(
+                    "Leave Management System using Simple Hashing and B-Plus Trees\n\nMenu:\n1. Add Employee\n2. Increment Leaves\n3. Search Employee\n4. Request Leave\n5. Display Employees and Remaining Leaves\n6. Exit\n\nEnter your choice:");
+
+            switch (choice) {
+                case "1":
+                    int employeeId = Integer.parseInt(JOptionPane.showInputDialog("Enter employee ID:"));
+
+                    String name = JOptionPane.showInputDialog("Enter employee name:");
+                    double cl = Double.parseDouble(JOptionPane.showInputDialog("Enter casual leaves:"));
+                    double sl = Double.parseDouble(JOptionPane.showInputDialog("Enter sick leaves:"));
+                    double pl = Double.parseDouble(JOptionPane.showInputDialog("Enter personal leaves:"));
+
+                    boolean employeeAdded = obj.insert(employeeId, name, cl, sl, pl);
+                    if (employeeAdded) {
+                        JOptionPane.showMessageDialog(null, "Employee added successfully.");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Employee already exists.");
+                    }
+
+                    break;
+                case "2":
+                    obj.increment();
+                    JOptionPane.showMessageDialog(null, "Employee deleted successfully.");
+
+                    break;
+                case "3":
+                    int employeeIdToSearch = Integer.parseInt(JOptionPane.showInputDialog("Enter employee ID to search:"));
+                    if (employeeIdToSearch >= 0) {
+                        String employeeDetails = obj.search((employeeIdToSearch));
+                        if (employeeDetails != "") {
+                            JOptionPane.showMessageDialog(null, "Employee Details:\n\n" + employeeDetails + "\n");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Employee not found.\n");
+                        }
+                    }
+                    break;
+
+                case "4":
+                    int employeeIdToRequestLeave = Integer.parseInt(JOptionPane
+                            .showInputDialog("Enter employee ID to request leave:"));
+                    if (employeeIdToRequestLeave >= 0) {
+                        //boolean employeeExists = bPlusTree.checkEmployeeExists(employeeIdToRequestLeave);
+                        if (true) {
+                            String[] leaveOptions = {"Casual", "Sick", "Personal"};
+                            String leaveType = (String) JOptionPane.showInputDialog(
+                                    null,
+                                    "Select leave type:",
+                                    "Leave Type",
+                                    JOptionPane.PLAIN_MESSAGE,
+                                    null,
+                                    leaveOptions,
+                                    leaveOptions[0]);
+                            if (leaveType != null) {
+                                String leavesRequiredInput = JOptionPane
+                                        .showInputDialog("Enter the number of leaves required:");
+                                if (leavesRequiredInput != null) {
+                                    try {
+                                        double leavesRequired = Double.parseDouble(leavesRequiredInput);
+                                        int type = 1;
+                                        switch (leaveType){
+                                            case "Casual": type = 1;break;
+                                            case "Sick"  : type = 2; break;
+                                            case "Personal" : type = 3; break;
+                                        }
+										System.out.println(leaveType + type);
+                                        boolean leaveRequested = obj.requestLeave(employeeIdToRequestLeave, type, leavesRequired);
+                                        if (leaveRequested) {
+                                            //updateRemainingLeave(employeeIdToRequestLeave, leaveType, leavesRequired);
+                                            JOptionPane.showMessageDialog(null, "Leave requested successfully.");
+                                        } else {
+                                            JOptionPane.showMessageDialog(null,
+                                                    "Insufficient remaining leaves or leave already requested for the given employee.");
+                                        }
+                                    } catch (NumberFormatException e) {
+										e.printStackTrace(System.out);
+                                        JOptionPane.showMessageDialog(null,"Invalid input for number of leaves required.");
+                                    }
+                                }
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Employee does not exist.");
+                        }
+                    }
+                    break;
+                case "5":
+                    //String displayText = bPlusTree.displayEmployees();
+                    // JOptionPane.showMessageDialog(null, displayText);
+
+                    JOptionPane pane = new JOptionPane("Show", JOptionPane.INFORMATION_MESSAGE);
+                    pane.setPreferredSize(new Dimension(800, 600)); // Set the desired size
+                    JDialog dialog = pane.createDialog(null, "Employee Information");
+                    dialog.setVisible(true);
+                    break;
+
+                case "6":
+                    exit = true;
+                    break;
+
+                default:
+                    JOptionPane.showMessageDialog(null, "Invalid choice.");
+                    break;
+            }
+
+        }
+    }
 	
 	public void create_index()throws IOException,ArrayIndexOutOfBoundsException
 	{
@@ -83,7 +169,7 @@ public class SimpleHashing
 			}
 		}
 	}
-	public void insert(int empId, String name , double cl, double sl, double el)throws IOException,FileNotFoundException{
+	public boolean insert(int empId, String name , double cl, double sl, double el)throws IOException,FileNotFoundException{
 				
 		int flag = 0;
 		long pos;
@@ -98,7 +184,8 @@ public class SimpleHashing
 			if (empid_temp == empId) 
 			{
 				flag = -1;
-				break;
+				return false;
+
 			}
 			if (empid_temp > empId) 
 			{
@@ -140,12 +227,15 @@ public class SimpleHashing
 				FileWriter fw = new FileWriter(filename,false); //the true will append the new data
 				fw.write(empId+" " + strAppend);//appends the string to the file
 				fw.close();
+				return true;
 			}
 			catch(IOException ioe)
 			{
 				System.err.println("IOException: " + ioe.getMessage());
+				return false;
 			}
 		}
+        return true;
 	}
 	
 	public void increment()throws IOException{
@@ -161,9 +251,10 @@ public class SimpleHashing
 			float cl = Float.parseFloat(line[2])+1;
 			float sl = Float.parseFloat(line[3])+1;
 			float pl = Float.parseFloat(line[4])+1;
-			writeBack += empId+"|"+name+"|"+cl+"|"+sl+"|"+pl+"|"+"\n";
+			writeBack += empId+"|"+name+"|"+cl+"|"+sl+"|"+pl+"|";
 		}
 		file.seek(0);
+		
 		file.write(writeBack.getBytes());
 		file.close();
 		
@@ -222,16 +313,52 @@ public class SimpleHashing
 		
 	}
 	
-	public void search()throws IOException
-	{
-	int pos;
-	System.out.println("Enter the usn to be searched");
-	String key = s.nextLine();
-	pos = search_index(key);
-	if(pos!=-1)
-	display_record(pos);
-	else
-	System.out.println("Record not found");
+	public String search(int empId)throws IOException
+
+	{	System.out.println("empID: -"+Integer.toString(empId)+ "-");
+		String keys;
+		RandomAccessFile inpFile = new RandomAccessFile("input.dat","r");
+		keys = inpFile.readLine();
+		String [] keys_arr = keys.split(" ");
+		int flag = 0;
+		for (String k : keys_arr){
+			if (Integer.parseInt(k) == empId){
+				flag  = 1;
+				System.out.println("FLAG");
+				break;
+			}
+		}
+		if (flag == 0) return "";
+		inpFile.close();
+		String arg [] = new String[] {"input.dat", "3", "16", "output1.dat"};
+		
+		BPlus.main(arg);
+		//read 3rd line
+		RandomAccessFile file1 = new RandomAccessFile("output1.dat", "r");
+		String s, writeBack = "";
+		s = file1.readLine();
+		s = file1.readLine();
+		s = file1.readLine();//3rd line
+		int lineNo = Integer.parseInt(s);
+		file1.close();
+		
+		RandomAccessFile file = new RandomAccessFile("details.txt", "rw");
+		for (int i = 1; i < lineNo; i++){
+			s = file.readLine();
+			
+		}
+		s = file.readLine();
+		String[] line = s.split("\\|");
+		String file_empId = line[0];
+		String name = line[1];
+		float cl = Float.parseFloat(line[2]);
+		float sl = Float.parseFloat(line[3]);
+		float pl = Float.parseFloat(line[4]);
+		
+		writeBack += "Employee ID: " + empId+"\nEmployee name: "+name+"\nRemaining CL: "+cl;
+			writeBack += "\nRemaining SL: "+sl+"\nRemaining PL: "+pl;
+		
+		return writeBack;
 
 	}
 	public int search_index(String key)
@@ -273,34 +400,6 @@ public class SimpleHashing
 	}
 	file.close();
 	}
-	public void remove()throws IOException
-	{
-	System.out.println("Enter the key to be deleted");
-	String key = s.nextLine();
-	int pos = search_index(key);
-	if(pos != -1)
-	{
-	delete_from_file(pos);
-	create_index();
-	}
-	else
-	System.out.println("Record not found");
+	
 
-	}
-	public void delete_from_file(int pos)throws IOException
-	{
-	display_record(pos);
-	RandomAccessFile file = new RandomAccessFile("details.txt", "rw");
-	System.out.println("Are you sure you want to delete? (Y/N)");
-	String ch = s.nextLine();
-	if(ch.equalsIgnoreCase("y"))
-	{
-	int address= Address_list[pos];
-	String del_ch="*";
-	file.seek(address);
-	file.writeBytes(del_ch);
-	System.out.println("Record is deleted");
-	}
-	file.close();
-	}
 }
