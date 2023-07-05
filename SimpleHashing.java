@@ -28,7 +28,7 @@ public class SimpleHashing
         boolean exit = false;
         while (!exit) {
             String choice = JOptionPane.showInputDialog(
-                    "Leave Management System using Simple Hashing and B-Plus Trees\n\nMenu:\n1. Add Employee\n2. Increment Leaves\n3. Search Employee\n4. Request Leave\n5. Display Employees and Remaining Leaves\n6. Exit\n\nEnter your choice:");
+                    "Leave Management System using Simple Hashing and B-Plus Trees\n\nMenu:\n1. Add Employee\n2. Increment Leaves\n3. Search Employee\n4. Request Leave\n5. Display Employees and Remaining Leaves\n6.About Project\n7. Exit\n\nEnter your choice:");
 
             switch (choice) {
                 case "1":
@@ -95,7 +95,7 @@ public class SimpleHashing
                                         boolean leaveRequested = obj.requestLeave(employeeIdToRequestLeave, type, leavesRequired);
                                         if (leaveRequested) {
                                             //updateRemainingLeave(employeeIdToRequestLeave, leaveType, leavesRequired);
-                                            JOptionPane.showMessageDialog(null, "Leave requested successfully.");
+                                            JOptionPane.showMessageDialog(null, "Leave granted.");
                                         } else {
                                             JOptionPane.showMessageDialog(null,
                                                     "Insufficient remaining leaves or leave already requested for the given employee.");
@@ -120,8 +120,15 @@ public class SimpleHashing
                     JDialog dialog = pane.createDialog(null, "Employee Information");
                     dialog.setVisible(true);
                     break;
-
-                case "6":
+				
+				case "6":
+					String credits = "";
+					credits += "This Project, 'Leave Management System using B-Plus Trees and Simple Hashing' was developed";
+					credits += "\nby Ajay V Kamath and Atharv Kulkarni under the guidance of Dr. Veena N, belonging to ISE Dept.";
+					credits += "\nof BMS Institute of Technology and Management as a part of Mini Project for File Structures\nLaboratory";
+					JOptionPane.showMessageDialog(null, credits);
+					break;
+                case "7":
                     exit = true;
                     break;
 
