@@ -1,1 +1,1 @@
-This Project, 'Leave Management System using B-Plus Trees and Simple Hashing' was developed by Ajay V Kamath and Atharv Kulkarni under the guidance of Dr. Veena N, belonging to ISE Dept of BMS Institute of Technology and Management as a part of Mini Project for File Structures Laboratory
+This Project, 'Leave Management System using B-Plus Trees and Simple Hashing' was developed as a part of Mini Project for File Structures Laboratory
