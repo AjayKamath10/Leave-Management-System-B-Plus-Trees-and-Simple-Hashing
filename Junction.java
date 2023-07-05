@@ -45,13 +45,13 @@ public class Junction {
 	
 	
 	//returns 'true' if this leaf is too big
-	protected boolean overflow(){
+	public boolean overflow(){
 		return this.size > this.T-1;
 	}//overflow()
 	
 	
 	//splits this junction into 2- updates this junction to be the left half, and returns the right half
-	protected Junction split(Junction parent){
+	public Junction split(Junction parent){
 		int halfPointers;	//sets pointers to middle of this junction
 		if (this.pointers.size()%2 == 0)
 			 halfPointers= this.pointers.size() - this.pointers.size()/2;
@@ -90,7 +90,7 @@ public class Junction {
 	
 	
 	//splits the son sent to this method
-	protected void splitSon(Object node){
+	public void splitSon(Object node){
 		int location= 0;
 		boolean found= false;
 		while (!found){	//locates the son that needs to be split
@@ -142,49 +142,50 @@ public class Junction {
 	
 	
 	//returns the size of this junction
-	protected int getSize(){
+	public int getSize(){
 		return this.size;
 	}//getSize()
 	
 	
 	//returns the elemets of this junction
-	protected Vector<Link> getElements(){
+	public Vector<Link> getElements(){
 		return this.elements;
 	}//getElement()
 
 	
 	//returns the sons of this junction
-	protected Vector<Object> getPointers(){
+	public Vector<Object> getPointers(){
 		return this.pointers;
 	}//getPointers()
 	
 	
 	//returns the last link in this junction
-	protected Link getLast(){
+	public Link getLast(){
 		return this.elements.lastElement();
 	}//getLast()
 	
 	
 	//retunrs the parent of this junction
-	protected Junction getParent(){
+	public Junction getParent(){
 		return this.parent;
 	}//getParent()
 	
 	
 	//sets the parent of this junction
-	protected void setParent(Junction parent){
+	public void setParent(Junction parent){
 		this.parent= parent;
 	}//setParent(Junction)
 	
 
 	//sets the parent of this junction
-	protected void setSize(int size){
+	public void setSize(int size){
 		this.size= size;
 	}//setParent(Junction)
 	
 	
+	
 	//removes the last element of this junction
-	protected void removeLastElement(){
+	public void removeLastElement(){
 		if (this.pointers.size() == this.elements.size()){	//will not allow a gap to form
 			this.elements.remove(this.elements.size()-1);
 		}
@@ -193,7 +194,7 @@ public class Junction {
 	
 	
 	//finds x in this junction. if used while inserting, increases the size of this junction's numOfElemets
-	protected Object find(int x, boolean isInserting){
+	public Object find(int x, boolean isInserting){
 		if (isInserting)	//for insertion uses of this method
 			this.numOfElements++;
 		for (int i=0; i < this.elements.size(); i++){	//scans the junction for the leaf's location
@@ -205,7 +206,7 @@ public class Junction {
 	
 	
 	//returns the number of elements under this junction
-	protected int numOfElements(){
+	public int numOfElements(){
 		return this.numOfElements;
 	}//numOfElements()
 	

@@ -8,6 +8,7 @@ Last modification: 24/5/2013
 public class Link {
 
 	/*Fields*/
+	/*Fields*/
 	//element- holds the numaric value of this given link
 	private int element;
 	//prev- points to the previous link in the list of numbers (spans over all the leafs in the tree)
@@ -27,31 +28,31 @@ public class Link {
 	
 	
 	//data getter
-	protected int getElement() {
+	public int getElement() {
 		return this.element;
 	}//getData()
 	
 	
 	//next getter
-	protected Link getNext() {
+	public Link getNext() {
 		return next;
 	}//getNext()
 	
 	
 	//next setter
-	protected void setNext(Link next) {
+	public void setNext(Link next) {
 		this.next = next;
 	}//setNext(Link)
 
 	
 	//prev getter
-	protected Link getPrev() {
+	public Link getPrev() {
 		return prev;
 	}//getPrev()
 	
 
 	//prev setter
-	protected void setPrev(Link prev) {
+	public void setPrev(Link prev) {
 		this.prev = prev;
 	}//setPrev(Link)
 

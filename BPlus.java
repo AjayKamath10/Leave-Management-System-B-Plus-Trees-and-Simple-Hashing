@@ -4,6 +4,7 @@ author: Gal Luvton and Daniel Sinaniev
 Date Created: 19/5/2013
 Last modification: 24/5/2013
 */
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
 
 
 public class BPlus {
@@ -93,7 +95,7 @@ public class BPlus {
 	}//insert(int)
 	
 	
-	//splits the roon into 2 junctions/leafs and makes a new root
+	//splits the root into 2 junctions/leafs and makes a new root
 	private void splitRoot(){
 		if (this.root instanceof Leaf){
 			Leaf newLeaf= ((Leaf)this.root).split(null);	//splits the root

@@ -1,5 +1,8 @@
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.io.*;
 import java.util.Scanner;
+
 public class SimpleHashing
 {
 	public static int count;
@@ -11,8 +14,8 @@ public class SimpleHashing
 	SimpleHashing obj = new SimpleHashing();
 	
 	
-	//obj.insert(9,"ABC",5,3,9);
-	obj.increment();
+	obj.insert(22,"xyz",4,3.5,6);
+	//obj.requestLeave(7,1,1.0);
 	
 	
 	/*while(true)
@@ -80,7 +83,7 @@ public class SimpleHashing
 			}
 		}
 	}
-	public void insert(int empId, String name , float cl, float sl, float el)throws IOException,FileNotFoundException{
+	public void insert(int empId, String name , double cl, double sl, double el)throws IOException,FileNotFoundException{
 				
 		int flag = 0;
 		long pos;
@@ -113,16 +116,11 @@ public class SimpleHashing
 		}
 		else{
 			
-			
-		
-		
+
 			String line = empId+"|"+name+"|"+cl+"|"+sl+"|"+el+"|"+"\n";
 			file.seek(pos);
 			String tempAdd = "";
 			if (flag == 1){
-				
-				
-				
 				
 				while((s = file.readLine())!=null)
 				{
@@ -136,9 +134,11 @@ public class SimpleHashing
 			
 			try
 			{
+				Path fileName= Path.of("input.dat");
+				String strAppend = Files.readString(fileName);
 				String filename= "input.dat";
-				FileWriter fw = new FileWriter(filename,true); //the true will append the new data
-				fw.write(empId+" ");//appends the string to the file
+				FileWriter fw = new FileWriter(filename,false); //the true will append the new data
+				fw.write(empId+" " + strAppend);//appends the string to the file
 				fw.close();
 			}
 			catch(IOException ioe)
@@ -168,6 +168,14 @@ public class SimpleHashing
 		file.close();
 		
 	}
+	
+	public void requestLeave(int empId, int type, double days){
+		String arg [] = new String[] {"input.dat", "3", Integer.toString(empId), "output1.dat"};
+		
+		BPlus.main(arg);
+		
+	}
+	
 	public void search()throws IOException
 	{
 	int pos;

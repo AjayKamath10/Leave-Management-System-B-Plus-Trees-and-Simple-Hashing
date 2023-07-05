@@ -57,19 +57,19 @@ public class Leaf {
 	
 	
 	//returns the last Link in this leaf
-	protected Link getLast(){
+	public Link getLast(){
 		return this.data.lastElement();
 	}//getLast()
 
 	
 	//gets the first Link in this leaf
-	protected Link getFirst(){
+	public Link getFirst(){
 		return this.data.firstElement();
 	}//getFirst()
 	
 	
 	//inserts a new key into the leaf. returns the minimal gap between this link and the adjacent ones
-	protected int insert(Link key){
+	public int insert(Link key){
 		int ans= Integer.MAX_VALUE;	//sets the value to a high number to ensure the corrent gap will register
 		boolean stop= false;
 		int i;	//will point to the location of the new key in this leaf
@@ -125,13 +125,13 @@ public class Leaf {
 	
 	
 	//returns 'true' if this leaf is too big
-	protected boolean overflow(){
+	public boolean overflow(){
 		return (this.size > this.T-1);
 	}//overflow()
 	
 
 	//splits this leaf into 2- updates this leaf to be the left half, and returns the right half
-	protected Leaf split(Junction parent){
+	public Leaf split(Junction parent){
 		int half= this.size - this.size/2;
 		Leaf newLeaf= new Leaf(this.data.remove(half), this.T, parent, this.next, this);	//creates a new leaf with the middle link of this leaf
 		this.size= this.data.size();
@@ -157,37 +157,37 @@ public class Leaf {
 	
 	
 	//returns the links of this leaf
-	protected Vector<Link> getData(){
+	public Vector<Link> getData(){
 		return this.data;
 	}//getData()
 	
 	
 	//returns the next leaf in the list
-	protected Leaf getNext(){
+	public Leaf getNext(){
 		return this.next;
 	}//getNext()
 	
 	
 	//sets the next leaf in the list
-	protected void setNext(Leaf next){
+	public void setNext(Leaf next){
 		this.next= next;
 	}//setNext()
 	
 	
 	//returns the parent of this leaf
-	protected Junction getParent(){
+	public Junction getParent(){
 		return this.parent;
 	}//getParent()
 	
 	
 	//sets the parent of this leaf
-	protected void setParent(Junction parent){
+	public void setParent(Junction parent){
 		this.parent= parent;
 	}//setParent
 	
 	
 	//returns the size of this link
-	protected int getSize(){
+	public int getSize(){
 		return this.size;
 	}//getSize()
 	
