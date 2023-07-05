@@ -14,8 +14,8 @@ public class SimpleHashing
 	SimpleHashing obj = new SimpleHashing();
 	
 	
-	obj.insert(22,"xyz",4,3.5,6);
-	//obj.requestLeave(7,1,1.0);
+	//obj.insert(22,"xyz",4,3.5,6);
+	obj.requestLeave(22,2,0.5);
 	
 	
 	/*while(true)
@@ -169,10 +169,56 @@ public class SimpleHashing
 		
 	}
 	
-	public void requestLeave(int empId, int type, double days){
+	public boolean requestLeave(int empId, int type, double days) throws FileNotFoundException, IOException{
+		if (type < 1 || type > 3){
+			System.out.println("Invalid type");
+			return false;
+		}
 		String arg [] = new String[] {"input.dat", "3", Integer.toString(empId), "output1.dat"};
 		
 		BPlus.main(arg);
+		//read 3rd line
+		RandomAccessFile file1 = new RandomAccessFile("output1.dat", "r");
+		String s, writeBack = "";
+		s = file1.readLine();
+		s = file1.readLine();
+		s = file1.readLine();//3rd line
+		int lineNo = Integer.parseInt(s);
+		file1.close();
+		
+		RandomAccessFile file = new RandomAccessFile("details.txt", "rw");
+		for (int i = 1; i < lineNo; i++){
+			s = file.readLine();
+			
+		}
+		long pos = file.getFilePointer();
+		s = file.readLine();
+		String[] line = s.split("\\|");
+		String file_empId = line[0];
+		String name = line[1];
+		float cl = Float.parseFloat(line[2]);
+		float sl = Float.parseFloat(line[3]);
+		float pl = Float.parseFloat(line[4]);
+		
+		if (type == 1){
+			if (days > cl) return false;
+			cl -= days;
+		}
+		else if (type == 2){
+			if (days > sl) return false;
+			sl -= days;
+		}
+		else if (type == 3){
+			if (days > pl) return false;
+			pl -= days;
+		}
+		file.seek(pos);
+		writeBack += file_empId+"|"+name+"|"+cl+"|"+sl+"|"+pl+"|"+"\n";
+		file.write(writeBack.getBytes());
+		file.close();
+		return true;
+		
+		
 		
 	}
 	
