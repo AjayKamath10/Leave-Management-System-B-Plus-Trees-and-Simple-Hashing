@@ -1,6 +1,1 @@
-B--Tree
-=======
-
-A B+ tree implementation in Java. In order to compile, import as a project in any Java IDE (such as eclipse).
-
-A document has been added with the task requirements.
+This Project, 'Leave Management System using B-Plus Trees and Simple Hashing' was developed by Ajay V Kamath and Atharv Kulkarni under the guidance of Dr. Veena N, belonging to ISE Dept of BMS Institute of Technology and Management as a part of Mini Project for File Structures Laboratory
