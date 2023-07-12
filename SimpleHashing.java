@@ -33,16 +33,18 @@ public class SimpleHashing
             switch (choice) {
                 case "1":
                     int employeeId = Integer.parseInt(JOptionPane.showInputDialog("Enter employee ID:"));
-
-                    String name = JOptionPane.showInputDialog("Enter employee name:");
-                    double cl = Double.parseDouble(JOptionPane.showInputDialog("Enter casual leaves:"));
-                    double sl = Double.parseDouble(JOptionPane.showInputDialog("Enter sick leaves:"));
-                    double pl = Double.parseDouble(JOptionPane.showInputDialog("Enter personal leaves:"));
-
-                    boolean employeeAdded = obj.insert(employeeId, name, cl, sl, pl);
-                    if (employeeAdded) {
-                        JOptionPane.showMessageDialog(null, "Employee added successfully.");
-                    } else {
+					String employee_exist = obj.search(employeeId);
+					if(employee_exist == ""){
+						String name = JOptionPane.showInputDialog("Enter employee name:");
+                    	double cl = Double.parseDouble(JOptionPane.showInputDialog("Enter casual leaves:"));
+                    	double sl = Double.parseDouble(JOptionPane.showInputDialog("Enter sick leaves:"));
+                    	double pl = Double.parseDouble(JOptionPane.showInputDialog("Enter personal leaves:"));
+                    	boolean employeeAdded = obj.insert(employeeId, name, cl, sl, pl);
+                    	if (employeeAdded) {
+                        	JOptionPane.showMessageDialog(null, "Employee added successfully.");
+                    	}
+					}
+                     else {
                         JOptionPane.showMessageDialog(null, "Employee already exists.");
                     }
 
@@ -237,7 +239,7 @@ public class SimpleHashing
 			System.out.println("Invalid type");
 			return false;
 		}
-		String arg [] = new String[] {"input.dat", "3", Integer.toString(empId), "output1.dat"};
+		String arg [] = new String[] {"input.dat", "4", Integer.toString(empId), "output1.dat"};
 		
 		BPlus.main(arg);
 		//read 3rd line
@@ -302,7 +304,7 @@ public class SimpleHashing
 		}
 		if (flag == 0) return "";
 		inpFile.close();
-		String arg [] = new String[] {"input.dat", "3", Integer.toString(empId), "output1.dat"};
+		String arg [] = new String[] {"input.dat", "4", Integer.toString(empId), "output1.dat"};
 		
 		BPlus.main(arg);
 		//read 3rd line
@@ -376,8 +378,4 @@ public class SimpleHashing
 		return b;
 		
 	}
-	
-	
-	
-
 }
