@@ -224,8 +224,12 @@ public class SimpleHashing
 				FileWriter fw = new FileWriter(filename,false); //the true will append the new data
 				fw.write(empId+" " + strAppend);//appends the string to the file
 				fw.close();
+				String arg [] = new String[] {"input.dat", "4", Integer.toString(empId), "output1.dat"};
+		
+				BPlus.main(arg);
 				return true;
 			}
+			
 			catch(IOException ioe)
 			{
 				System.err.println("IOException: " + ioe.getMessage());
