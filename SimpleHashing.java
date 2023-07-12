@@ -28,7 +28,7 @@ public class SimpleHashing
         boolean exit = false;
         while (!exit) {
             String choice = JOptionPane.showInputDialog(
-                    "Leave Management System using Simple Hashing and B-Plus Trees\n\nMenu:\n1. Add Employee\n2. Increment Leaves\n3. Search Employee\n4. Request Leave\n5. Display Employees and Remaining Leaves\n6.About Project\n7. Exit\n\nEnter your choice:");
+                    "Leave Management System using Simple Hashing and B-Plus Trees\n\nMenu:\n1. Add Employee\n2. Increment Leaves\n3. Search Employee\n4. Request Leave\n5. Display Employees and Remaining Leaves\n6. Delete Employees\n7. About Project\n8. Exit\n\nEnter your choice:");
 
             switch (choice) {
                 case "1":
@@ -93,7 +93,7 @@ public class SimpleHashing
                                             case "Sick"  : type = 2; break;
                                             case "Personal" : type = 3; break;
                                         }
-										System.out.println(leaveType + type);
+										//System.out.println(leaveType + type);
                                         boolean leaveRequested = obj.requestLeave(employeeIdToRequestLeave, type, leavesRequired);
                                         if (leaveRequested) {
                                             //updateRemainingLeave(employeeIdToRequestLeave, leaveType, leavesRequired);
@@ -115,22 +115,45 @@ public class SimpleHashing
                     break;
                 case "5":
                     String displayText = obj.displayAll();;
-                     JOptionPane.showMessageDialog(null, displayText);
-
-                    JOptionPane pane = new JOptionPane("Show", JOptionPane.INFORMATION_MESSAGE);
-                    pane.setPreferredSize(new Dimension(800, 600)); // Set the desired size
-                    JDialog dialog = pane.createDialog(null, "Employee Information");
-                    dialog.setVisible(true);
+                    JOptionPane.showMessageDialog(null, displayText);
                     break;
-				
 				case "6":
+					int delEmployeeId = Integer.parseInt(JOptionPane.showInputDialog("Enter employee ID to be deleted:"));
+					String delEmployee_exist = obj.search(delEmployeeId);
+					if(delEmployee_exist == ""){
+						JOptionPane.showMessageDialog(null, "Employee does not exist.");
+					}
+                     else {
+                    	String employeeDeleted = obj.deleteEmployee(delEmployeeId);
+                    	if (employeeDeleted != "") {
+                        	String showDelEmp = "";
+							String[] line = employeeDeleted.split("\\|");
+							String DempId = line[0];
+							String Dname = line[1];
+							float Dcl = Float.parseFloat(line[2]);
+							float Dsl = Float.parseFloat(line[3]);
+							float Dpl = Float.parseFloat(line[4]);
+							
+							showDelEmp += "Employee ID: " + DempId+"\nEmployee name: "+Dname+"\nRemaining CL: "+Dcl;
+							showDelEmp += "\nRemaining SL: "+Dsl+"\nRemaining PL: "+Dpl;
+							//System.out.println("Search output: " + showDelEmp);
+							JOptionPane.showMessageDialog(null, "Employee deleted successfully. Details of deleted employee:\n"+showDelEmp);
+                    	}
+                        
+                    }
+					break;
+					
+					
+					
+				
+				case "7":
 					String credits = "";
 					credits += "This Project, 'Leave Management System using B-Plus Trees and Simple Hashing' was developed";
 					credits += "\nby Ajay V Kamath and Atharv Kulkarni under the guidance of Dr. Veena N, belonging to ISE Dept.";
 					credits += "\nof BMS Institute of Technology and Management as a part of Mini Project for File Structures\nLaboratory";
 					JOptionPane.showMessageDialog(null, credits);
 					break;
-                case "7":
+                case "8":
                     exit = true;
                     break;
 
@@ -295,10 +318,11 @@ public class SimpleHashing
 		keys = inpFile.readLine();
 		String [] keys_arr = keys.split(" ");
 		int flag = 0;
+		if (keys.equals("")) return "";
 		for (String k : keys_arr){
 			if (Integer.parseInt(k) == empId){
 				flag  = 1;
-				System.out.println("FLAG");
+				//System.out.println("FLAG");
 				break;
 			}
 		}
@@ -317,11 +341,14 @@ public class SimpleHashing
 		file1.close();
 		
 		RandomAccessFile file = new RandomAccessFile("details.txt", "r");
-		for (int i = 1; i < lineNo; i++){
+		/*for (int i = 1; i < lineNo; i++){
 			s = file.readLine();
 			
-		}
+		}*/
+		file.seek(34*(lineNo-1));
 		s = file.readLine();
+		//System.out.println("Search LineNo: " + lineNo);
+		//System.out.println("Search output: " + s);
 		String[] line = s.split("\\|");
 		String file_empId = line[0];
 		String name = line[1];
@@ -331,11 +358,51 @@ public class SimpleHashing
 		file.close();
 		writeBack += "Employee ID: " + empId+"\nEmployee name: "+name+"\nRemaining CL: "+cl;
 			writeBack += "\nRemaining SL: "+sl+"\nRemaining PL: "+pl;
-		
+		//System.out.println("Search output: " + writeBack);
 		return writeBack;
 
 	}
-	
+	public String deleteEmployee(int empId)throws IOException{
+		String writeBack = "", s;
+		String deletedRecord = "";
+		String empid = "1";
+		RandomAccessFile file = new RandomAccessFile("details.txt", "r");
+		while((s = file.readLine())!=null)
+		{
+			String[] line = s.split("\\|");
+			empid = line[0];
+			if (!(empid.equals(Integer.toString(empId))))
+				writeBack += s + "\n";
+			else deletedRecord = s;
+		}
+		file.close();
+		
+		BufferedWriter writer = new BufferedWriter(new FileWriter("details.txt", false));
+		writer.write(writeBack);
+		writer.close();
+		
+		RandomAccessFile ifile = new RandomAccessFile("input.dat", "r");
+		String firstLine = ifile.readLine();
+		String[] iline = firstLine.split("\\s+");
+		int counter ;
+		String writeFirstLine = "";
+		for (counter = 0; counter < iline.length;counter++){
+			if (!(iline[counter].equals(Integer.toString(empId)))){
+				writeFirstLine += iline[counter] ;
+				if (counter < iline.length - 1) writeFirstLine += " ";
+			}
+		}
+		writeFirstLine += "\n"; 
+		writer = new BufferedWriter(new FileWriter("input.dat", false));
+		writer.write(writeFirstLine);
+		writer.close();
+		String arg [] = new String[] {"input.dat", "4", empid, "output1.dat"};
+		
+		
+		BPlus.main(arg);
+		return deletedRecord;
+		
+	}
 	public String displayAll() throws FileNotFoundException, IOException{
 		String ret = "";
 		RandomAccessFile file = new RandomAccessFile("details.txt", "r");
@@ -346,9 +413,9 @@ public class SimpleHashing
 			String[] line = s.split("\\|");
 			String empId = line[0];
 			String name = line[1];
-			float cl = Float.parseFloat(line[2])+1;
-			float sl = Float.parseFloat(line[3])+1;
-			float pl = Float.parseFloat(line[4])+1;
+			float cl = Float.parseFloat(line[2]);
+			float sl = Float.parseFloat(line[3]);
+			float pl = Float.parseFloat(line[4]);
 			ret += "\nEmployee ID: " + empId;
 			ret += "\nEmployee Name: " + name;
 			ret += "\nRemaining CL: " + cl;
@@ -368,9 +435,9 @@ public class SimpleHashing
 		int len = 32;
 		int le = b.length();
 		String s1 = "-";
-		if(le<50)
+		if(le<len)
 		{
-			for(int j=le;j<=50;j++)
+			for(int j=le;j<len;j++)
 			b = b.concat(s1);
 			
 		}
